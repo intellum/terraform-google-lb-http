@@ -204,3 +204,15 @@ variable "https_redirect" {
   type        = bool
   default     = false
 }
+
+variable "host_rules" {
+  description = "Define host rules"
+  type        = map
+  default     = {}
+}
+
+variable "path_matchers" {
+  description = "Define path matchers"
+  type        = map
+  default     = {}
+}

@@ -97,6 +97,26 @@ resource "google_compute_url_map" "default" {
   count           = var.create_url_map ? 1 : 0
   name            = "${var.name}-url-map"
   default_service = google_compute_backend_service.default[keys(var.backends)[0]].self_link
+  dynamic "host_rule" {
+    for_each = var.host_rules
+    content {
+      hosts        = var.host_rule.hosts
+      path_matcher = var.host_rule.path_matcher
+    }
+  }
+  dynamic "path_matcher" {
+    for_each = var.path_matchers
+    content {
+      name                 = path_matcher.name
+      default_service      = element(path_matcher, "default_service", null)
+      description          = element(path_matcher, "description", null)
+      header_action        = element(path_matcher, "header_action", null)
+      path_rule            = element(path_matcher, "path_rule", null)
+      route_rules          = element(path_matcher, "route_rules", null)
+      default_url_redirect = element(path_matcher, "default_url_redirect", null)
+      default_route_action = element(path_matcher, "default_route_action", null)
+    }
+  }
 }
 
 resource "google_compute_url_map" "https_redirect" {
